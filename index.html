@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h3>Dashboard</h3>
+
+      <div class="summary">
+        <div class="card" id="task">
+          <h4>Total Tasks</h4>
+          <div class="count">0</div>
+        </div>
+        <div class="card" id="todo">
+          <h4>Todo</h4>
+          <div class="count">0</div>
+        </div>
+        <div class="card" id="inprogress">
+          <h4>In Progress</h4>
+          <div class="count">0</div>
+        </div>
+        <div class="card" id="completed">
+          <h4>Completed</h4>
+          <div class="count">0</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-box">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search tasks..."
+          />
+          <button id="searchBtn" type="button" onclick="searchfield()">Search</button>
+        </div>
+
+        <label for="status">Status:</label>
+        <select id="status">
+          <option value="">All</option>
+          <option value="Todo">Todo</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+
+        <label for="priority">Priority:</label>
+        <select id="priority">
+          <option value="">All</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+
+        <label for="tag">Tags:</label>
+        <select id="tag">
+          <option value="">All</option>
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+          <option value="react">React</option>
+          <option value="bug">Bug</option>
+          <option value="api">API</option>
+        </select>
+      </div>
+
+      <div class="section-label">Task List</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Task ID</th>
+            <th>Title</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Tags</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="taskBody"></tbody>
+      </table>
+
+      <div class="form-section">
+        <div class="section-label">Add Task</div>
+        <form id="taskForm">
+          <div>
+            <label for="taskid">Task Id</label>
+            <input type="number" name="taskId" id="taskid" disabled required />
+          </div>
+
+          <div>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" required />
+          </div>
+
+          <div>
+            <label for="assignee">Assignee</label>
+            <input type="text" name="assignee" id="assignee" required />
+          </div>
+
+          <div>
+            <label for="statusf">Status</label>
+            <select id="statusf">
+              <option value="Todo">Todo</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="priorityf">Priority</label>
+            <select id="priorityf">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="tagf">Tags</label>
+            <input type="text" name="tags" id="tagf" required />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit">Add Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="task.js"></script>
+  </body>
+</html>
