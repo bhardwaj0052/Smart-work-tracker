@@ -20,12 +20,12 @@ const completed = tasks.filter((item) => item.status === "Completed");
 document.getElementById("completed").innerHTML =
   "Completed =" + completed.length;
 
-const table = (data) =>{
-const tasklist = document.getElementById("taskBody");
-tasklist.innerHTML = ""
-const rows = data.map(
-  (task) =>
-    (tasklist.innerHTML += `
+const table = (data) => {
+  const tasklist = document.getElementById("taskBody");
+  tasklist.innerHTML = "";
+  const rows = data.map(
+    (task) =>
+      (tasklist.innerHTML += `
     <tr>
       <td>${task.id}</td>
       <td>${task.title}</td>
@@ -35,9 +35,9 @@ const rows = data.map(
       <td>${task.tags.join(", ")}</td>
       <td><button onclick="handleedit(${task.id})">Edit</button> <button onclick="handleDelete(${task.id})">Delete</button></td>
     </tr>`),
-);
-}
-table(tasks)
+  );
+};
+table(tasks);
 
 const taskform = document.getElementById("taskForm");
 const handlesubmit = () => {
@@ -49,7 +49,7 @@ const handlesubmit = () => {
     assignee: document.getElementById("assignee").value,
     status: document.getElementById("statusf").value,
     priority: document.getElementById("priorityf").value,
-    tags: document.getElementById("tagf").value.split(", ")
+    tags: document.getElementById("tagf").value.split(", "),
   };
   const existdata = tasks.findIndex((item) => item.id == obj.id);
   if (existdata !== -1) {
@@ -72,17 +72,46 @@ const handleedit = (id) => {
   const tags = (document.getElementById("tagf").value = task.tags.join(", "));
 };
 
-const searchfield = () => {
-  const value = document.getElementById("search").value.trim()
+const searchfield = (key, value) => {
   if (!value) {
-    return table([]);
+    return table(tasks);
   }
-  const result = tasks.filter(
-    (item) =>
-      item.id == value ||
-      item.assignee.toLowerCase().includes(value.toLowerCase()) ||
-      item.title.toLowerCase().includes(value.toLowerCase()),
-  );
+  const result = tasks.filter((item) => {
+    // item[key].toLowerCase() == value.toLowerCase()
+    if (Array.isArray(item[key])) {
+      return item[key].join(" ").toLowerCase().includes(value.toLowerCase());
+    } else {
+      return item[key].toLowerCase().includes(value.toLowerCase());
+    }
+  });
   return table(result);
 };
 
+const searchtext = document.getElementById("search");
+const priority = document.getElementById("priority");
+const field = document.getElementById("Field");
+const statusv = document.getElementById("status");
+const show = () => {
+  if (field.value === "status" || field.value === "priority") {
+    document.getElementById("search").style.display = "none";
+    field.value == "status"
+      ? ((statusv.style.display = "block"), (priority.style.display = "none"))
+      : ((priority.style.display = "block"), (statusv.style.display = "none"));
+    priority.addEventListener("change", () => {
+      searchfield(field.value.trim(), priority.value);
+    });
+    statusv.addEventListener("change", () => {
+      searchfield(field.value.trim(), statusv.value);
+    });
+  } else {
+    document.getElementById("search").style.display = "block";
+    statusv.style.display = "none";
+    priority.style.display = "none";
+    searchtext.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        searchfield(field.value.trim(), searchtext.value.trim());
+      }
+    });
+  }
+};
+field.addEventListener("change", show);

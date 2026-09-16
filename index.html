@@ -29,40 +29,39 @@
       </div>
 
       <div class="toolbar">
-        <div class="search-box">
-          <input
+
+        <label for="status">Filter:</label>
+        <select id="Field" >
+          <option value="">All</option>
+          <option value="id">Task Id</option>
+          <option value="title">Title</option>
+          <option value="assignee">Assignee</option>
+          <option value="status">Status</option>
+          <option value="priority">Priority</option>
+          <option value="tags">Tags</option>
+        </select>
+        <input
             type="text"
             name="search"
             id="search"
-            placeholder="Search tasks..."
+            placeholder="Search..."
+            style="display: none;"
           />
-          <button id="searchBtn" type="button" onclick="searchfield()">Search</button>
-        </div>
-
-        <label for="status">Status:</label>
-        <select id="status">
-          <option value="">All</option>
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-        </select>
-
-        <label for="priority">Priority:</label>
-        <select id="priority">
+        <select id="priority" 
+            style="display: none;"
+        >
           <option value="">All</option>
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
         </select>
-
-        <label for="tag">Tags:</label>
-        <select id="tag">
+        <select id="status"
+            style="display: none;"
+        >
           <option value="">All</option>
-          <option value="frontend">Frontend</option>
-          <option value="backend">Backend</option>
-          <option value="react">React</option>
-          <option value="bug">Bug</option>
-          <option value="api">API</option>
+          <option value="Todo">Todo</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
         </select>
       </div>
 
