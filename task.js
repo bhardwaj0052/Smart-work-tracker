@@ -1,11 +1,5 @@
-const handleDelete = (id) => {
-  const remain = tasks.filter((item) => item.id != id);
-  tasks = remain;
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-};
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-console.log(tasks);
+const updateDashboard = ()=>{
 const totallength = tasks.length;
 document.getElementById("task").innerHTML = "Total task =" + totallength;
 
@@ -19,11 +13,21 @@ document.getElementById("inprogress").innerHTML =
 const completed = tasks.filter((item) => item.status === "Completed");
 document.getElementById("completed").innerHTML =
   "Completed =" + completed.length;
+}
 
+const handleDelete = (id) => {
+  const remain = tasks.filter((item) => item.id !== id);
+  tasks = remain;
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  location.reload();
+  updateDashboard();
+};
+
+updateDashboard()
 const table = (data) => {
   const tasklist = document.getElementById("taskBody");
   tasklist.innerHTML = "";
-  const rows = data.map(
+  data.forEach(
     (task) =>
       (tasklist.innerHTML += `
     <tr>
@@ -42,28 +46,29 @@ table(tasks);
 const taskform = document.getElementById("taskForm");
 const handlesubmit = () => {
   const obj = {
-    id: !document.getElementById("taskid").value
+    id: Number(!document.getElementById("taskid").value
       ? Date.now()
-      : document.getElementById("taskid").value,
+      : document.getElementById("taskid").value),
     title: document.getElementById("title").value,
     assignee: document.getElementById("assignee").value,
     status: document.getElementById("statusf").value,
     priority: document.getElementById("priorityf").value,
-    tags: document.getElementById("tagf").value.split(", "),
+    tags: [...new Set((document.getElementById("tagf").value.split(", ")))],
   };
-  const existdata = tasks.findIndex((item) => item.id == obj.id);
+  const existdata = tasks.findIndex((item) => item.id === obj.id);
   if (existdata !== -1) {
     tasks[existdata] = obj;
   } else {
     tasks.push(obj);
   }
   localStorage.setItem("tasks", JSON.stringify(tasks));
+  updateDashboard();
   return table(tasks);
 };
 taskform.addEventListener("submit", handlesubmit);
 
 const handleedit = (id) => {
-  const task = tasks.find((item) => item.id == id);
+  const task = tasks.find((item) => item.id === id);
   const taskId = (document.getElementById("taskid").value = task.id);
   const title = (document.getElementById("title").value = task.title);
   const assignee = (document.getElementById("assignee").value = task.assignee);
@@ -81,7 +86,7 @@ const searchfield = (key, value) => {
     if (Array.isArray(item[key])) {
       return item[key].join(" ").toLowerCase().includes(value.toLowerCase());
     } else {
-      return item[key].toLowerCase().includes(value.toLowerCase());
+      return item[key].toString().toLowerCase().includes(value.toLowerCase());
     }
   });
   return table(result);
@@ -94,7 +99,7 @@ const statusv = document.getElementById("status");
 const show = () => {
   if (field.value === "status" || field.value === "priority") {
     document.getElementById("search").style.display = "none";
-    field.value == "status"
+    field.value === "status"
       ? ((statusv.style.display = "block"), (priority.style.display = "none"))
       : ((priority.style.display = "block"), (statusv.style.display = "none"));
     priority.addEventListener("change", () => {
@@ -114,11 +119,8 @@ const show = () => {
     document.getElementById("search").style.display = "block";
     statusv.style.display = "none";
     priority.style.display = "none";
-    searchtext.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        searchfield(field.value.trim(), searchtext.value.trim());
-      }
-    });
+    searchtext.addEventListener("input", ()=>{
+        searchfield(field.value.trim(), searchtext.value.trim())});
   }
 };
 field.addEventListener("change", show);
