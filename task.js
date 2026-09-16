@@ -73,7 +73,7 @@ const handleedit = (id) => {
 };
 
 const searchfield = (key, value) => {
-  if (!value) {
+  if (!value || !key) {
     return table(tasks);
   }
   const result = tasks.filter((item) => {
@@ -103,7 +103,14 @@ const show = () => {
     statusv.addEventListener("change", () => {
       searchfield(field.value.trim(), statusv.value);
     });
-  } else {
+  } 
+  else if(field.value === ""){
+    document.getElementById("search").style.display = "none";
+    priority.style.display = "none";
+    statusv.style.display = "none";
+    return table(tasks);
+  }
+  else {
     document.getElementById("search").style.display = "block";
     statusv.style.display = "none";
     priority.style.display = "none";
