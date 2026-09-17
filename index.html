@@ -11,7 +11,7 @@
 
       <div class="summary">
         <div class="card" id="task">
-          <h4>Total Tasks</h4>
+          <h4>Total tasks</h4>
           <div class="count">0</div>
         </div>
         <div class="card" id="todo">
@@ -29,9 +29,8 @@
       </div>
 
       <div class="toolbar">
-
         <label for="status">Filter:</label>
-        <select id="Field" >
+        <select id="Field">
           <option value="">All</option>
           <option value="id">Task Id</option>
           <option value="title">Title</option>
@@ -41,23 +40,19 @@
           <option value="tags">Tags</option>
         </select>
         <input
-            type="text"
-            name="search"
-            id="search"
-            placeholder="Search..."
-            style="display: none;"
-          />
-        <select id="priority" 
-            style="display: none;"
-        >
+          type="text"
+          name="search"
+          id="search"
+          placeholder="Search..."
+          style="display: none"
+        />
+        <select id="priority" style="display: none">
           <option value="">All</option>
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
         </select>
-        <select id="status"
-            style="display: none;"
-        >
+        <select id="status" style="display: none">
           <option value="">All</option>
           <option value="Todo">Todo</option>
           <option value="In Progress">In Progress</option>
@@ -86,7 +81,7 @@
         <form id="taskForm">
           <div>
             <label for="taskid">Task Id</label>
-            <input type="number" name="taskId" id="taskid" disabled required />
+            <input type="number" name="taskId" id="taskid" required />
           </div>
 
           <div>

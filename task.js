@@ -1,29 +1,30 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-const updateDashboard = ()=>{
-const totallength = tasks.length;
-document.getElementById("task").innerHTML = "Total task =" + totallength;
+let edit = false;
+const updateDashboard = () => {
+  const totallength = tasks.length;
+  document.getElementById("task").innerHTML = "Total task =" + totallength;
 
-const todo = tasks.filter((item) => item.status === "Todo");
-document.getElementById("todo").innerHTML = "Todo =" + todo.length;
+  const todo = tasks.filter((item) => item.status === "Todo");
+  document.getElementById("todo").innerHTML = "Todo =" + todo.length;
 
-const inprogress = tasks.filter((item) => item.status === "In Progress");
-document.getElementById("inprogress").innerHTML =
-  "In Progress =" + inprogress.length;
+  const inprogress = tasks.filter((item) => item.status === "In Progress");
+  document.getElementById("inprogress").innerHTML =
+    "In Progress =" + inprogress.length;
 
-const completed = tasks.filter((item) => item.status === "Completed");
-document.getElementById("completed").innerHTML =
-  "Completed =" + completed.length;
-}
+  const completed = tasks.filter((item) => item.status === "Completed");
+  document.getElementById("completed").innerHTML =
+    "Completed =" + completed.length;
+};
 
 const handleDelete = (id) => {
-  const remain = tasks.filter((item) => item.id !== id);
+  const remain = tasks.filter((item) => item.id !== Number(id));
   tasks = remain;
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  location.reload();
+  table(tasks);
   updateDashboard();
 };
 
-updateDashboard()
+updateDashboard();
 const table = (data) => {
   const tasklist = document.getElementById("taskBody");
   tasklist.innerHTML = "";
@@ -46,35 +47,42 @@ table(tasks);
 const taskform = document.getElementById("taskForm");
 const handlesubmit = () => {
   const obj = {
-    id: Number(!document.getElementById("taskid").value
-      ? Date.now()
-      : document.getElementById("taskid").value),
+    id: Number(document.getElementById("taskid").value),
     title: document.getElementById("title").value,
     assignee: document.getElementById("assignee").value,
     status: document.getElementById("statusf").value,
     priority: document.getElementById("priorityf").value,
-    tags: [...new Set((document.getElementById("tagf").value.split(", ")))],
+    tags: [...new Set(document.getElementById("tagf").value.split(", "))],
   };
-  const existdata = tasks.findIndex((item) => item.id === obj.id);
-  if (existdata !== -1) {
-    tasks[existdata] = obj;
+  if (edit) {
+    const index = tasks.findIndex((task) => task.id === Number(obj.id));
+    tasks[index] = obj;
   } else {
-    tasks.push(obj);
+    const existtask = new Set(tasks.map((item) => item.id));
+    if (existtask.has(obj.id)) {
+      alert("Task Id already exist");
+      return;
+    } else {
+      tasks.push(obj);
+    }
   }
   localStorage.setItem("tasks", JSON.stringify(tasks));
+  edit = false;
   updateDashboard();
   return table(tasks);
 };
 taskform.addEventListener("submit", handlesubmit);
 
 const handleedit = (id) => {
-  const task = tasks.find((item) => item.id === id);
-  const taskId = (document.getElementById("taskid").value = task.id);
-  const title = (document.getElementById("title").value = task.title);
-  const assignee = (document.getElementById("assignee").value = task.assignee);
-  const status = (document.getElementById("statusf").value = task.status);
-  const priority = (document.getElementById("priorityf").value = task.priority);
-  const tags = (document.getElementById("tagf").value = task.tags.join(", "));
+  const task = tasks.find((item) => item.id === Number(id));
+  edit = true;
+  document.getElementById("taskid").disabled = true;
+  document.getElementById("taskid").value = task.id;
+  document.getElementById("title").value = task.title;
+  document.getElementById("assignee").value = task.assignee;
+  document.getElementById("statusf").value = task.status;
+  document.getElementById("priorityf").value = task.priority;
+  document.getElementById("tagf").value = task.tags.join(", ");
 };
 
 const searchfield = (key, value) => {
@@ -102,25 +110,27 @@ const show = () => {
     field.value === "status"
       ? ((statusv.style.display = "block"), (priority.style.display = "none"))
       : ((priority.style.display = "block"), (statusv.style.display = "none"));
-    priority.addEventListener("change", () => {
-      searchfield(field.value.trim(), priority.value);
-    });
-    statusv.addEventListener("change", () => {
-      searchfield(field.value.trim(), statusv.value);
-    });
-  } 
-  else if(field.value === ""){
+  } else if (field.value === "") {
     document.getElementById("search").style.display = "none";
     priority.style.display = "none";
     statusv.style.display = "none";
     return table(tasks);
-  }
-  else {
+  } else {
     document.getElementById("search").style.display = "block";
     statusv.style.display = "none";
     priority.style.display = "none";
-    searchtext.addEventListener("input", ()=>{
-        searchfield(field.value.trim(), searchtext.value.trim())});
   }
 };
+
 field.addEventListener("change", show);
+priority.addEventListener("change", () => {
+  searchfield(field.value.trim(), priority.value);
+});
+
+statusv.addEventListener("change", () => {
+  searchfield(field.value.trim(), statusv.value);
+});
+
+searchtext.addEventListener("input", () => {
+  searchfield(field.value.trim(), searchtext.value.trim());
+});
